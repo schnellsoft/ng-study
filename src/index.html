@@ -5,11 +5,18 @@
   <title>A001</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light dark">
   <script>
     try {
-      document.querySelector('meta[name="color-scheme"]').content =
-        localStorage.getItem('color-scheme') ?? 'dark';
+      const stored = localStorage.getItem('color-scheme');
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      if (!meta) {
+        // no-op
+      } else if (stored === 'light' || stored === 'dark') {
+        meta.content = stored;
+      } else {
+        meta.content = 'light dark';
+      }
     } catch {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
