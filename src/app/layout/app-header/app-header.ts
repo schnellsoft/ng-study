@@ -17,10 +17,6 @@ import { SettingsPanel } from '../../settings/settings-panel';
       </div>
 
       <div class="toolbar" role="toolbar" aria-label="Workspace actions">
-        @if (settings.status(); as status) {
-          <p class="toolbar-status" aria-live="polite">{{ status }}</p>
-        }
-
         <button
           type="button"
           class="tool-btn"
@@ -115,17 +111,6 @@ import { SettingsPanel } from '../../settings/settings-panel';
       justify-content: flex-end;
     }
 
-    .toolbar-status {
-      margin: 0 0.35rem 0 0;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      max-width: 14rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
     .tool-btn {
       display: inline-flex;
       align-items: center;
@@ -164,10 +149,6 @@ import { SettingsPanel } from '../../settings/settings-panel';
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
-      }
-
-      .toolbar-status {
-        display: none;
       }
     }
   `,

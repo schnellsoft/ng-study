@@ -7,6 +7,7 @@ import {
   SavedSettings,
   ThemePreference,
 } from './saved-settings.model';
+import { StatusBarService } from './status-bar.service';
 import { ThemeService } from './theme.service';
 
 @Injectable({ providedIn: 'root' })
@@ -14,8 +15,8 @@ export class SavedSettingsService {
   private readonly http = inject(HttpClient);
   private readonly canvas = inject(CanvasStateService);
   private readonly theme = inject(ThemeService);
+  private readonly statusBar = inject(StatusBarService);
 
-  readonly status = signal<string | null>(null);
   readonly busy = signal(false);
 
   async save(): Promise<void> {
@@ -24,7 +25,7 @@ export class SavedSettingsService {
     }
 
     this.busy.set(true);
-    this.status.set(null);
+    this.statusBar.setMessage('Saving…');
 
     const payload: SavedSettings = {
       theme: this.theme.preference(),
@@ -36,9 +37,12 @@ export class SavedSettingsService {
       const saved = await firstValueFrom(
         this.http.put<SavedSettings>('/api/settings', payload),
       );
-      this.status.set(saved.updatedAt ? `Saved ${formatStamp(saved.updatedAt)}` : 'Saved');
+      this.statusBar.setLastSavedAt(saved.updatedAt);
+      this.statusBar.setMessage(
+        saved.updatedAt ? `Saved at ${formatStamp(saved.updatedAt)}` : 'Saved',
+      );
     } catch {
-      this.status.set('Save failed — is the SSR API available?');
+      this.statusBar.setMessage('Save failed — is the SSR API available?');
     } finally {
       this.busy.set(false);
     }
@@ -50,17 +54,20 @@ export class SavedSettingsService {
     }
 
     this.busy.set(true);
-    this.status.set(null);
+    this.statusBar.setMessage('Loading…');
 
     try {
       const saved = await firstValueFrom(this.http.get<SavedSettings>('/api/settings'));
       this.applySettings(saved);
-      this.status.set(
-        saved.updatedAt ? `Loaded ${formatStamp(saved.updatedAt)}` : 'Loaded defaults',
+      this.statusBar.setLastSavedAt(saved.updatedAt);
+      this.statusBar.setMessage(
+        saved.updatedAt
+          ? `Loaded save from ${formatStamp(saved.updatedAt)}`
+          : 'Loaded defaults',
       );
     } catch {
       this.applySettings(DEFAULT_SAVED_SETTINGS);
-      this.status.set('Load failed — applied built-in defaults');
+      this.statusBar.setMessage('Load failed — applied built-in defaults');
     } finally {
       this.busy.set(false);
     }
