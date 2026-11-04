@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: light dark;
+
+  &:has(> head > meta[name='color-scheme'][content='dark']) {
+    color-scheme: dark;
+  }
+
+  &:has(> head > meta[name='color-scheme'][content='light']) {
+    color-scheme: light;
+  }
+
+  --font-sans: 'Outfit', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --bg-light: oklch(96% 0.01 95);
+  --bg-dark: oklch(18% 0.02 95);
+  --surface-light: oklch(99% 0.005 95);
+  --surface-dark: oklch(24% 0.02 95);
+  --border-light: oklch(82% 0.02 95);
+  --border-dark: oklch(35% 0.02 95);
+  --text-light: oklch(22% 0.02 95);
+  --text-dark: oklch(94% 0.01 95);
+  --muted-light: oklch(45% 0.02 95);
+  --muted-dark: oklch(72% 0.02 95);
+  --accent-light: oklch(48% 0.12 155);
+  --accent-dark: oklch(78% 0.14 155);
+
+  --bg: light-dark(var(--bg-light), var(--bg-dark));
+  --surface: light-dark(var(--surface-light), var(--surface-dark));
+  --border: light-dark(var(--border-light), var(--border-dark));
+  --text: light-dark(var(--text-light), var(--text-dark));
+  --muted: light-dark(var(--muted-light), var(--muted-dark));
+  --accent: light-dark(var(--accent-light), var(--accent-dark));
+
+  accent-color: var(--accent);
+  scrollbar-color: light-dark(oklch(70% 0.02 95), oklch(42% 0.02 95)) transparent;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+button {
+  font: inherit;
+}
